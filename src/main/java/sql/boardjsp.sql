@@ -42,3 +42,5 @@ insert into member(id, pass, name) values('kkk4', '3333', '조용재');
 insert into member(id, pass, name) values('kkk5', '4444', '이영훈');
 
 select * from member;
+
+select * from member where id='kkk1' and pass='1234';

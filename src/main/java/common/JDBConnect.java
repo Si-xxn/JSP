@@ -7,8 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.servlet.ServletContext;
+
 public class JDBConnect {
 	// 데이터베이스와 자바를 연결하는 객체 클래스
+	// 단점 : URL, ID, PW 변경 시 코드 수정 후 -> 컴파일 다시 실행 후 배포 해야함.
 	// 1단계 : 드라이버
 	// 2단계 : URL / ID / PW
 	// 3단계 : 쿼리 생성
@@ -22,16 +25,16 @@ public class JDBConnect {
 	public ResultSet resultSet; 		// select 결과를 표로 출력
 	
 	// 생성자
-	public JDBConnect() {
+	public JDBConnect() { //기본생성자
 		
 		try {
 			Class.forName("oracle.jdbc.OracleDriver"); //1단계
-			System.out.println("JDBConnect 생성자 1단계 성공");
+			System.out.println("JDBConnect 기본 생성자 1단계 성공");
 			String url = "jdbc:oracle:thin:@192.168.111.101:1521:xe";
 			String id = "boardjsp";
 			String pw = "1234";
 			connection = DriverManager.getConnection(url, id, pw);	// 2단계
-			System.out.println("JDBConnect 생성자 2단계 성공");
+			System.out.println("JDBConnect 기본 생성자 2단계 성공");
 		} catch (Exception e) {
 			System.out.println("1단계, 2단계, 3단계를 확인하세요.");
 			e.printStackTrace();
@@ -39,8 +42,49 @@ public class JDBConnect {
 		
 		
 	} // JDBConnect() 종료
+	
+	// 커스텀 생성자
+	public JDBConnect(String driver, String url, String id, String pwd) {
+		// 단점 : JSP 에서 4개의 매개값을 항시 받아야한다.
+		
+		try {
+			Class.forName(driver); // 1단계
+			System.out.println("커스텀 생성자로 1단계 연결 성공");
+			connection = DriverManager.getConnection(url, id, pwd); // 2단계
+			System.out.println("커스텀 생성자로 2단계 연결 성공");
+			
+		} catch (ClassNotFoundException e) {
+			System.out.println("1단계 예외발생");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("2단계, 3단계 예외발생");
+			e.printStackTrace();
+		}
+		
+	}
+	
+	// 커스텀 생성자 - Application 활용
+	public JDBConnect(ServletContext application) {
+		String driver = application.getInitParameter("OracleDriver");
+		String url = application.getInitParameter("OracleURL");
+		String id = application.getInitParameter("OracleId");
+		String pwd = application.getInitParameter("OraclePwd");
+		
+		try {
+			
+			Class.forName(driver);
+			System.out.println("커스텀 생성자2로 1단계 연결 성공");
+			connection = DriverManager.getConnection(url, id, pwd);
+			System.out.println("커스텀 생성자2로 2단계 연결 성공");
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println("커스텀 생성자2로 1, 2, 3단계 실패");
+			e.printStackTrace();
+		}
+				
+	}
+	
 	// 메서드
-
 	public void close() {
 		try {
 			

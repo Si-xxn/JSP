@@ -6,10 +6,38 @@
   <welcome-file-list> <!-- http://192.168.111.101:80/Board-JSP/로 접속시 아래 파일을 찾는다. -->
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  
+  <!-- 세션 관리 (유지시간 설정) - 세션 만료시간 20분으로 설정 -->
+  <session-config>
+  	<session-timeout>20</session-timeout>
+  </session-config>
+  
+   <!-- JSP 에서 web.xml 값을 가져오는 연습 -->
   <context-param>
  	<param-name>INTI_PARAM</param-name>
  	<param-value>web.xml에서 만든 초기화 매개값</param-value> 
-  </context-param> <!-- JSP 에서 web.xml 값을 가져오는 연습 -->
+  </context-param>
+  
+  <!-- JDBC용 코드 삽입 : 컴파일 없이 수정가능 -->
+  <context-param>
+  	<param-name>OracleDriver</param-name>
+  	<param-value>oracle.jdbc.OracleDriver</param-value>
+  </context-param>
+  
+   <context-param>
+  	<param-name>OracleURL</param-name>
+  	<param-value>jdbc:oracle:thin:@localhost:1521:xe</param-value>
+  </context-param>
+  
+   <context-param>
+  	<param-name>OracleId</param-name>
+  	<param-value>boardjsp</param-value>
+  </context-param>
+  
+   <context-param>
+  	<param-name>OraclePwd</param-name>
+  	<param-value>1234</param-value>
+  </context-param>
   
   <!-- 톰캣에서 에러페이지 처리를 커스텀 처리 -->
   <error-page>
