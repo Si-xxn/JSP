@@ -3,7 +3,7 @@
 <!DOCTYPE html><html><head><meta charset="UTF-8"><title>LoginForm.jsp</title> <!-- 로그인 성공 -> 세션에 저장 / 로그인 실패 -> 돌아가기 -->
 </head>
 <body>
-	<%-- <jsp:include page="../Common/Link.jsp" /> --%>
+	<jsp:include page="../Common/Link.jsp" />
     <h2>로그인 페이지</h2>
     <span style="color: red; font-size: 1.2em;"> 
         <%= request.getAttribute("LoginErrMsg") == null ?

@@ -55,4 +55,19 @@
   	<location>/02ImplicitObject/Exeption.jsp</location>
   </error-page>
   
+  <!-- 포스트 방식의 한글 깨짐 방지를 위한 필터 설정(필터는 톰캣이 클라이언트의 요청을 처리 전에 걸러서 보냄) -->
+  <filter>
+    <filter-name>SetCharEncoding</filter-name>
+    <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+      <init-param>
+        <param-name>encoding</param-name>
+        <param-value>utf-8</param-value>
+      </init-param>
+  </filter>
+  <!-- 매핑은 위에서 만든 틸터를 적용할 범위 설정 -->
+  <filter-mapping>
+    <filter-name>SetCharEncoding</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
 </web-app>
