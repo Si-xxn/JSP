@@ -17,7 +17,7 @@ function validateForm(form) {  // 폼 내용 검증
     }
 }
 </script>
-</head>
+
 <body>
 <jsp:include page="../Common/Link.jsp" />
 <h2>회원제 게시판 - 글쓰기(Write)</h2>

@@ -114,5 +114,101 @@ public class BoardDAO extends JDBConnect {
 		}
 		return result;
 	}
+	
+	// 게시글에 제목을 클릭했을 때 상세보기 페이지
+	public BoardDTO selectView(String num) {
+		// 메서드 호출 시 입력 num (boardk_pk) 받고 가져온 데이터를 BoardDTO 객체에 넣어 리턴
+		BoardDTO viewDTO = new BoardDTO();
+		
+		// 쿼리문 생성 / member PK -> board FK
+//		String query = "select * from board where num=? "; // 작성자 판단 불가능
+//		member 에 있는 작성자를 가져올 수 있도록 join 처리
+		String query = "select B.*, M.name from member M inner join board B on M.id = B.id where num=? ";
+		// member 테이블의 별칭 : M / board 테이블의 별칭 : B 선언
+		// 부모 테이블 M inner join 으로 B를 이용 -> ID가 같은 자료를 찾는다.(M.id = B.id) 
+		// 조건 : 파라미터로 받은 BNO 이용 / 찾아온 값은 board 테이블의 모든 것과 member 테이블의 name 필드 가져옴 -> DTO에 name 필드 추가
+		
+		try {
+			preparedStatement = connection.prepareStatement(query); // 객체 생성
+			
+			preparedStatement.setString(1, num); 
+			
+			resultSet = preparedStatement.executeQuery(); // 쿼리 실행 후 표로 결과 받음
+			
+			if(resultSet.next()) {
+				viewDTO.setNum(resultSet.getString("num"));
+				viewDTO.setTitle(resultSet.getString("title"));
+				viewDTO.setContent(resultSet.getString("content"));
+				viewDTO.setPostdate(resultSet.getDate("postdate"));
+				viewDTO.setId(resultSet.getString("id"));
+				viewDTO.setVisitcount(resultSet.getString("visitcount"));
+				viewDTO.setName(resultSet.getString("name"));
+				System.out.println(viewDTO.toString()); 
+			}
+		} catch (SQLException e) {
+			System.out.println("BoardDAO.selectView 메서드 예외발생");
+			System.out.println("쿼리문 확인하세요.");
+			e.printStackTrace();
+		}
+		
+		return viewDTO;
+	}
+	
+	public void updateVisitCount(String num) {
+		// 리스트에서 제목을 클릭 했을 때 조회수 증가 코드
+		// void 리턴은 resultSet 안씀.
+		String query = "update board set visitcount = visitcount+1 where num=?";
+		// 조건에 대한 visitCount 1씩 증가
+		
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, num);
+			
+			preparedStatement.executeQuery(); // 실행만 하고 결과는 안 봄.
+		} catch (SQLException e) {
+			System.out.println("BoardDAO.updateVisitCount 예외발생 \n쿼리문 확인하세요.");
+			e.printStackTrace();
+		}
+	}
+	// 수정할 객체 받아서 성공시 1개의 값을 수정했다의 결과 리턴
+	public int updateEdit(BoardDTO boardDTO) {
+		int result=0;
+		
+		String query = "update board set title=?, content=? where num=?";
+		
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			
+			preparedStatement.setString(1, boardDTO.getTitle());
+			preparedStatement.setString(2, boardDTO.getContent());
+			preparedStatement.setString(3, boardDTO.getNum());
+			
+			result=preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("BoardDAO.updateEdit 예외 발생 \n쿼리문 확인");
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	// 삭제 메서드 DTO 받아 삭제 후 int 로 리턴
+	public int deletePost(BoardDTO boardDTO) {
+		int result=0;
+		
+		String query = "delete from board where num=?";
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, boardDTO.getNum());
+			
+			result = preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("BoardDAO.deletePost 예외 발생 \n쿼리문 확인");
+			e.printStackTrace();
+		}
+		
+		
+		return result;
+	}
 
 }

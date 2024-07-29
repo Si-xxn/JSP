@@ -2,7 +2,15 @@ package model1_board;
 
 import java.sql.Date;
 
+
+
 public class BoardDTO {
+	@Override
+	public String toString() {
+		return "BoardDTO [num=" + num + ", title=" + title + ", content=" + content + ", id=" + id + ", postdate="
+				+ postdate + ", visitcount=" + visitcount + ", name=" + name + "]";
+	}
+
 	// board 객체 처리 용도
 	private String num;
 	private String title;

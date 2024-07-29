@@ -1,6 +1,11 @@
 package memberShip;
 
 public class MemberDTO {
+	@Override
+	public String toString() {
+		return "MemberDTO [id=" + id + ", pass=" + pass + ", name=" + name + ", regdate=" + regdate + "]";
+	} // 객체를 문자열로 변환하여 값을 출력함(콘솔)
+
 	// 멤버 객체
 	// 필드
 	private String id;
