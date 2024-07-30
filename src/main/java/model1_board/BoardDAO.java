@@ -50,24 +50,29 @@ public class BoardDAO extends JDBConnect {
 	
 	// 게시물의 리스트
 	public List<BoardDTO> selectList(Map<String, Object> map){
-		List<BoardDTO> listBoardDTO = new Vector<BoardDTO>();
-		// 3단계
-		String query = "select * from board ";
-		if(map.get("searchWord")!= null) {
-			// 검색어 O
-			query += "where " + map.get("searchField") + " like '%"+map.get("searchWord")+"%'";
-			// searchField : 제목, 내용, 작성자(Object)
-			// searchWord : input="text" 로 넘어온 글자.
-			// select count(*) from board where 제목 like '%딸기%';
-		} // 검색어 조건 추가
-		query += "order by num desc"; // 내림차순 정렬
-		// 3단계 쿼리문 완성
+		// searchField , searchWord , start , end -> map 으로 전달
+		List<BoardDTO> listBoardDTO = new Vector<BoardDTO>(); // vector : 멀티스레드
 		
+		String query = "select * from ( select Tb.*, rownum rNum from ( select * from board ";
+		// 조건 추가
+		if (map.get("searchWord") != null) {
+			// 검색어가 있으면
+			query += "where " + map.get("searchField") + " like '%" + map.get("searchWord") + "%'";
+			// searchField : 제목,내용,작성자 
+			// searchWord : input text로 넘어온 글자
+			// select count(*) from board where 제목 like '%딸기%' ;
+		} // 검색어가 있으면 조건이 추가 된다.
+
+		query += "order by num desc ) Tb ) where rNum between ? and ? "; // 정렬 기준 추가
+		// 3단계 쿼리문 완성
 		// 4단계 : 실행
+		System.out.println(map.get("start").toString() + " " + map.get("end").toString());
 		try {
-			statement = connection.createStatement(); // 쿼리문 연결
+			preparedStatement = connection.prepareStatement(query); // 쿼리문 연결
+			preparedStatement.setString(1, map.get("start").toString()); // 시작번호
+			preparedStatement.setString(2, map.get("end").toString());	 // 끝번호
+			resultSet = preparedStatement.executeQuery(); // 쿼리문 실행 후 결과 표로 받음(4단계)
 			
-			resultSet = statement.executeQuery(query); // 쿼리문 실행 후 결과 표로 받음
 			while(resultSet.next()) {
 				BoardDTO boardDTO = new BoardDTO();
 				boardDTO.setNum(resultSet.getString("num"));

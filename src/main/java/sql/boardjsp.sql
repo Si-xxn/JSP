@@ -48,3 +48,13 @@ select * from member where id='kkk1' and pass='1234';
 select B.*, M.* from member M inner join board B on M.id = B.id where num=4;
 
 update board set visitcount = visitcount+1 where num=3;
+
+select * from board;
+
+select * from (
+				select Tb.*, rownum rNum from (
+												select * from board order by num desc 
+												)Tb
+				) where rNum between 1 and 10 ;
+				
+				
