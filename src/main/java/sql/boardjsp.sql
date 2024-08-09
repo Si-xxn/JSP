@@ -40,7 +40,7 @@ insert into member(id, pass, name) values('kkk2', '1111', '김지선');
 insert into member(id, pass, name) values('kkk3', '2222', '문지현');
 insert into member(id, pass, name) values('kkk4', '3333', '조용재');
 insert into member(id, pass, name) values('kkk5', '4444', '이영훈');
-
+insert into member values('bbb','0123','bbb',sysdate);
 select * from member;
 
 select * from member where id='kkk1' and pass='1234';
